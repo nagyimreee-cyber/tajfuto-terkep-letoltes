@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="hu" data-lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tájfutó Térkép Készítő – letöltés</title>
+<meta name="description" content="Tájfutó térkép (.omap, .ocd) nyílt adatokból, Windowsra – és a Tájfutó Terep Android-app a terepbejáráshoz és a pályatervezéshez.">
+<link rel="icon" href="img/icon.png">
+<style>
+:root {
+  --paper: #fbfaf6; --ink: #1d2024; --muted: #5b6168; --line: #dedad0; --card: #ffffff;
+  --brown: #b5651d; --orange: #e8730c; --purple: #a52a8a; --green: #2f8f3a; --blue: #1f6fb5; --yellow: #f4c430;
+  --contour: rgba(181, 101, 29, .16);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --paper: #15181c; --ink: #eceae4; --muted: #a7adb4; --line: #2c3238; --card: #1c2025; --contour: rgba(232, 140, 60, .10); --purple: #d45bb8; --blue: #5aa2e0; }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+html[data-lang="hu"] [lang="en"]:not(html), html[data-lang="en"] [lang="hu"]:not(html) { display: none !important; }
+a { color: var(--blue); }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+header.top { border-bottom: 1px solid var(--line); background: var(--card); }
+header.top .wrap { display: flex; align-items: center; gap: 12px; min-height: 60px; }
+header.top img { width: 34px; height: 34px; border-radius: 8px; }
+header.top b { font-size: 17px; }
+header.top nav { margin-left: auto; display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+header.top nav a { color: var(--muted); text-decoration: none; font-size: 14px; padding: 6px 8px; border-radius: 6px; }
+header.top nav a:hover { color: var(--ink); background: var(--paper); }
+.langsw { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; display: inline-flex; margin-left: 6px; }
+.langsw button { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600; padding: 5px 9px; cursor: pointer; }
+html[data-lang="hu"] .langsw [data-l="hu"], html[data-lang="en"] .langsw [data-l="en"] { background: var(--ink); color: var(--paper); }
+
+/* fejléc: halvány szintvonal-minta, mint egy térkép széle */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.hero svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero .wrap { position: relative; padding-top: 44px; padding-bottom: 40px; }
+.hero h1 { font-size: clamp(28px, 5vw, 42px); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.01em; }
+.hero p.lead { font-size: 18px; color: var(--muted); max-width: 660px; margin: 0 0 22px; }
+.ver { display: inline-flex; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); margin-bottom: 18px; flex-wrap: wrap; }
+.tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); }
+.tag.beta { border-color: var(--purple); color: var(--purple); }
+
+.dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.dlc { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.dlc h2 { margin: 0; font-size: 19px; display: flex; align-items: center; gap: 10px; }
+.dlc h2 .ico { width: 30px; height: 30px; flex: none; }
+.dlc p { margin: 0; color: var(--muted); font-size: 15px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 9px; font-weight: 700; text-decoration: none; font-size: 16px; border: 1px solid transparent; }
+.btn.win { background: var(--orange); color: #fff; }
+.btn.and { background: var(--green); color: #fff; }
+.btn:hover { filter: brightness(1.06); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); font-weight: 600; min-height: 40px; font-size: 14px; }
+.small { font-size: 13px; color: var(--muted); }
+code, .mono { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+.sha { word-break: break-all; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; display: block; }
+
+section { padding: 40px 0; border-bottom: 1px solid var(--line); }
+section h2.sec { font-size: 24px; margin: 0 0 6px; }
+section p.sub { margin: 0 0 20px; color: var(--muted); }
+
+.feat { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+.feat div { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--brown); border-radius: 8px; padding: 12px 14px; }
+.feat div:nth-child(3n+2) { border-left-color: var(--purple); }
+.feat div:nth-child(3n) { border-left-color: var(--green); }
+.feat b { display: block; margin-bottom: 2px; }
+.feat span { color: var(--muted); font-size: 14px; }
+
+.shots2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.shots3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 760px; margin: 0 auto; }
+.shots2 figure, .shots3 figure { margin: 0; }
+.shots2 img, .shots3 img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); background: var(--card); }
+.shots3 img { border-radius: 18px; }
+figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+@media (max-width: 760px) { .shots2 { grid-template-columns: 1fr; } .shots3 { gap: 8px; } }
+
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+.steps > div { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+.steps h3 { margin: 0 0 10px; font-size: 18px; }
+ol.n { margin: 0; padding-left: 22px; }
+ol.n li { margin: 0 0 8px; }
+.note { border-left: 4px solid var(--yellow); background: var(--card); padding: 10px 14px; border-radius: 6px; margin: 14px 0 0; font-size: 15px; }
+
+details { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin: 0 0 10px; }
+details summary { cursor: pointer; font-weight: 700; }
+details[open] summary { margin-bottom: 8px; }
+.log h4 { margin: 16px 0 4px; font-size: 16px; }
+.log ul { margin: 0; padding-left: 20px; }
+.log li { margin-bottom: 4px; }
+table.lic { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.lic td { border-top: 1px solid var(--line); padding: 7px 6px; vertical-align: top; }
+table.lic td:first-child { font-weight: 600; white-space: nowrap; }
+footer { padding: 26px 0 40px; color: var(--muted); font-size: 14px; }
+@media (max-width: 560px) { header.top nav a.opt { display: none; } .hero .wrap { padding-top: 28px; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <img src="img/icon.png" alt="">
+    <b>Tájfutó Térkép Készítő</b>
+    <nav>
+      <a class="opt" href="#letoltes"><span lang="hu">Letöltés</span><span lang="en">Download</span></a>
+      <a class="opt" href="#telepites"><span lang="hu">Telepítés</span><span lang="en">Install</span></a>
+      <a class="opt" href="#ujdonsagok"><span lang="hu">Újdonságok</span><span lang="en">What's new</span></a>
+      <a class="opt" href="https://github.com/nagyimreee-cyber/tajfuto-terkep-letoltes/issues/new?template=hiba.yml"><span lang="hu">Hiba bejelentése</span><span lang="en">Report a bug</span></a>
+      <span class="langsw" role="group" aria-label="Nyelv / Language"><button data-l="hu">HU</button><button data-l="en">EN</button></span>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <svg class="bg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 420">
+    <g fill="none" stroke="var(--contour)" stroke-width="2">
+      <path d="M-20 360 C 180 300, 300 380, 520 320 S 900 250, 1220 300"/>
+      <path d="M-20 320 C 200 250, 320 330, 540 270 S 920 200, 1220 250"/>
+      <path d="M-20 280 C 220 200, 340 280, 560 220 S 940 150, 1220 200"/>
+      <path d="M760 120 C 820 60, 960 60, 1010 120 S 950 230, 860 210 S 700 180, 760 120 Z"/>
+      <path d="M800 125 C 845 90, 935 92, 965 128 S 925 192, 870 182 S 770 160, 800 125 Z"/>
+      <path d="M842 132 C 870 115, 915 117, 928 136 S 905 166, 878 160 S 828 150, 842 132 Z"/>
+      <path d="M-20 240 C 240 150, 360 230, 580 170 S 960 100, 1220 150" stroke-width="3.2"/>
+    </g>
+    <g fill="none" stroke="var(--purple)" stroke-width="2.6" opacity=".38">
+      <path d="M960 86 l17 30 h-34 z"/>
+      <path d="M968 122 L1054 214"/><circle cx="1068" cy="230" r="21"/>
+      <path d="M1056 249 L1012 318"/><circle cx="1002" cy="336" r="21"/>
+      <path d="M1022 344 L1110 372"/><circle cx="1130" cy="378" r="17"/><circle cx="1130" cy="378" r="24"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <h1><span lang="hu">Tájfutó térkép nyílt adatokból – a saját gépeden</span><span lang="en">Orienteering maps from open data – on your own computer</span></h1>
+    <p class="lead">
+      <span lang="hu">Kijelölsz egy területet, és a program ISOM 2017-2 / ISSprOM 2019 szerinti, szerkeszthető térképet készít (OpenOrienteering Mapper .omap, OCAD .ocd, PDF). A terepbejáráshoz és a pályatervezéshez ott a „Tájfutó Terep” Android-app.</span>
+      <span lang="en">Select an area and the program builds an editable ISOM 2017-2 / ISSprOM 2019 map (OpenOrienteering Mapper .omap, OCAD .ocd, PDF). For field checking and course setting there is the “Tájfutó Terep” Android app.</span>
+    </p>
+    <div class="ver" id="ver"><span lang="hu">Legújabb változat:</span><span lang="en">Latest version:</span> <b id="verNum">…</b> <span id="verTag"></span> <span id="verDate"></span></div>
+    <div class="dl" id="letoltes">
+      <div class="dlc">
+        <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>Windows 10 / 11</h2>
+        <p><span lang="hu">A teljes térképkészítő program. Telepítő, rendszergazdai jog nélkül; frissítéskor a régi változat megmarad.</span><span lang="en">The full map-making program. Installer, no admin rights needed; the previous version is kept on update.</span></p>
+        <a class="btn win" id="dlSetup" href="https://github.com/nagyimreee-cyber/tajfuto-terkep-letoltes/releases"><span lang="hu">Letöltés Windowsra</span><span lang="en">Download for Windows</span></a>
+        <span class="small" id="szSetup"></span>
+      </div>
+      <div class="dlc">
+        <h2><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8"><rect x="6" y="2.5" width="12" height="19" rx="2"/><path d="M10.5 18.5h3"/></svg>Android – Tájfutó Terep</h2>
+        <p><span lang="hu">Terepbejárás GPS-szel, offline térkép, pályatervezés a Purple Pen menetével, szinkron a géppel Wi-Fin.</span><span lang="en">Field survey with GPS, offline map, Purple Pen-style course setting, sync with the computer over Wi-Fi.</span></p>
+        <a class="btn and" id="dlApk" href="https://github.com/nagyimreee-cyber/tajfuto-terkep-letoltes/releases"><span lang="hu">APK letöltése</span><span lang="en">Download the APK</span></a>
+        <span class="small" id="szApk"></span>
+      </div>
+    </div>
+    <p class="small" style="margin-top:12px">
+      <span lang="hu">Minden változat és az ellenőrző összegek:</span><span lang="en">All versions and checksums:</span>
+      <a href="https://github.com/nagyimreee-cyber/tajfuto-terkep-letoltes/releases">GitHub Releases</a>
+    </p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec"><span lang="hu">Mit tud?</span><span lang="en">What does it do?</span></h2>
+    <p class="sub"><span lang="hu">A feldolgozás teljesen a helyi gépen fut; a nyílt adatokat (domborzat, OpenStreetMap, műholdképek) a program maga tölti le.</span><span lang="en">Processing runs entirely on your computer; the program downloads the open data (elevation, OpenStreetMap, satellite imagery) itself.</span></p>
+    <div class="feat">
+      <div><b><span lang="hu">Szintvonalak és terepformák</span><span lang="en">Contours and landforms</span></b><span lang="hu">Országos domborzatmodellekből (pl. Lechner DEM25, osztrák 1 m-es LiDAR) vagy saját GeoTIFF/LAS/LAZ fájlból: dombok, gödrök, vízmosások, sziklák.</span><span lang="en">From national elevation models (e.g. Austrian 1 m LiDAR) or your own GeoTIFF/LAS/LAZ: knolls, pits, gullies, cliffs.</span></div>
+      <div><b><span lang="hu">Pályatervezés</span><span lang="en">Course setting</span></b><span lang="hu">Pontok, pályák, váltó és pontszerző, IOF-leírás, PDF-nyomtatás, Purple Pen- és IOF XML-csere.</span><span lang="en">Controls, courses, relay and score, IOF descriptions, PDF printing, Purple Pen and IOF XML exchange.</span></div>
+      <div><b><span lang="hu">Növényzet LiDAR nélkül</span><span lang="en">Vegetation without LiDAR</span></b><span lang="hu">Erdő, rét, sűrűség becslése műholdas és nyílt adatokból – „becsült” jelöléssel, bejárási tervvel.</span><span lang="en">Forest, open land and density estimated from satellite and open data – marked as estimates, with a field-check plan.</span></div>
+      <div><b><span lang="hu">Sprint térképek</span><span lang="en">Sprint maps</span></b><span lang="hu">ISSprOM 2019: épületek, kerítések, járhatatlan elemek városi területen.</span><span lang="en">ISSprOM 2019: buildings, fences, impassable features in urban areas.</span></div>
+      <div><b><span lang="hu">Terepbejárás a telefonon</span><span lang="en">Field work on the phone</span></b><span lang="hu">Pontok, vonalak, foltok GPS-szel, „Bejárás” sétálva, ellenőrizendő helyek navigációval, fotó, hangjegyzet.</span><span lang="en">Points, lines and areas with GPS, walk-to-draw, places to check with navigation, photos, voice notes.</span></div>
+      <div><b><span lang="hu">Frissítés a javításokkal</span><span lang="en">Update keeps your edits</span></b><span lang="hu">A Mapperben javított térképet friss adatokkal újragenerálja – a kézi javítások megmaradnak.</span><span lang="en">Regenerates a map you corrected in Mapper with fresh data – your manual edits are kept.</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec"><span lang="hu">Képernyőképek</span><span lang="en">Screenshots</span></h2>
+    <div class="shots2">
+      <figure><img src="img/pc.webp" alt="PC program – projektek" loading="lazy" width="1600" height="1000"><figcaption><span lang="hu">PC: projektgaléria (itt hat véletlen generált erdei térkép).</span><span lang="en">PC: project gallery (six randomly generated forest maps).</span></figcaption></figure>
+      <figure><img src="img/pc-terkep.webp" alt="PC program – eredmény" loading="lazy" width="1600" height="1000"><figcaption><span lang="hu">PC: a kész térkép és a letölthető kimenetek (OMAP, OCAD, PDF, GeoJSON, Garmin).</span><span lang="en">PC: the finished map and its outputs (OMAP, OCAD, PDF, GeoJSON, Garmin).</span></figcaption></figure>
+    </div>
+    <div class="shots3">
+      <figure><img src="img/telefon-terep.webp" alt="Telefon – Terep" loading="lazy" width="600" height="1231"><figcaption><span lang="hu">Telefon: terepbejárás GPS-szel.</span><span lang="en">Phone: field survey with GPS.</span></figcaption></figure>
+      <figure><img src="img/telefon-palya.webp" alt="Telefon – Pálya" loading="lazy" width="600" height="1231"><figcaption><span lang="hu">Telefon: pályatervezés, a pontok kirakásával kezdve.</span><span lang="en">Phone: course setting, starting with placing the controls.</span></figcaption></figure>
+      <figure><img src="img/telefon-projekt.webp" alt="Telefon – Projekt" loading="lazy" width="600" height="1231"><figcaption><span lang="hu">Telefon: projekt, kapcsolat a géppel, offline térkép.</span><span lang="en">Phone: project, link to the computer, offline map.</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="telepites">
+  <div class="wrap">
+    <h2 class="sec"><span lang="hu">Telepítés</span><span lang="en">Installation</span></h2>
+    <p class="sub"><span lang="hu">Pár perc. Internet csak a térképadatok letöltéséhez kell.</span><span lang="en">A few minutes. Internet is only needed to download map data.</span></p>
+    <div class="steps">
+      <div>
+        <h3>Windows</h3>
+        <ol class="n" lang="hu">
+          <li>Töltsd le a <b>TajfutoTerkep-Setup</b> fájlt, és indítsd el.</li>
+          <li>Ha a Windows „A számítógép védelme” ablakot mutat: <b>További információ → Futtatás mindenképp</b>. (A telepítő nincs kereskedelmi tanúsítvánnyal aláírva; az eredetiséget az ellenőrző összeg mutatja – lásd lent.)</li>
+          <li>Kövesd a varázslót. Rendszergazdai jog nem kell; a program a saját felhasználói mappádba kerül, a Start menübe és (kérésre) az asztalra parancsikonnal.</li>
+          <li>Frissítés: az új telepítőt egyszerűen futtasd a régi fölé – a beállítások, térképek, projektek megmaradnak.</li>
+        </ol>
+        <ol class="n" lang="en">
+          <li>Download <b>TajfutoTerkep-Setup</b> and run it.</li>
+          <li>If Windows shows “Windows protected your PC”: <b>More info → Run anyway</b>. (The installer is not signed with a commercial certificate; check its authenticity with the checksum – see below.)</li>
+          <li>Follow the wizard. No admin rights needed; the program goes into your own user folder, with a Start menu and (optional) desktop shortcut.</li>
+          <li>Updating: just run the new installer over the old one – settings, maps and projects are kept.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Android</h3>
+        <ol class="n" lang="hu">
+          <li>Töltsd le a <b>TajfutoTerep.apk</b> fájlt a telefonon (vagy a PC programból: Telefon és Garmin panel → APK / QR-kód).</li>
+          <li>Nyisd meg; a telefon kéri, hogy engedélyezd az <b>ismeretlen forrásból</b> való telepítést a böngészőnek / fájlkezelőnek – engedélyezd.</li>
+          <li>Telepítés után add meg a helymeghatározás engedélyét (a „Bejáráshoz” és a nyomvonalhoz: „Mindig” vagy „Használat közben”).</li>
+          <li>Párosítás a géppel: a PC programban a Telefon és Garmin panelen megjelenik a QR-kód és a PIN – a telefon ugyanazon a Wi-Fi-n legyen.</li>
+        </ol>
+        <ol class="n" lang="en">
+          <li>Download <b>TajfutoTerep.apk</b> on the phone (or from the PC program: Phone and Garmin panel → APK / QR code).</li>
+          <li>Open it; the phone asks you to allow installing from <b>unknown sources</b> for the browser / file manager – allow it.</li>
+          <li>After installing, grant location permission (for walk-to-draw and track recording: “Always” or “While using the app”).</li>
+          <li>Pairing with the computer: the PC program's Phone and Garmin panel shows a QR code and PIN – the phone must be on the same Wi-Fi.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="note">
+      <b><span lang="hu">Ellenőrző összeg (SHA256)</span><span lang="en">Checksum (SHA256)</span></b><br>
+      <span lang="hu">Windowson a PowerShellben:</span><span lang="en">On Windows in PowerShell:</span> <code>Get-FileHash .\<span id="hashName">TajfutoTerkep-Setup.exe</span> -Algorithm SHA256</code> –
+      <span lang="hu">az eredménynek egyeznie kell ezzel:</span><span lang="en">the result must match:</span>
+      <code class="sha" id="shaSetup">…</code>
+      <span lang="hu">Az APK-é:</span><span lang="en">The APK's:</span> <code class="sha" id="shaApk">…</code>
+    </div>
+    <details style="margin-top:14px">
+      <summary><span lang="hu">Visszaállás egy korábbi változatra</span><span lang="en">Going back to an earlier version</span></summary>
+      <p lang="hu">Windows: a Start menüben „Tájfutó Térkép Készítő – visszaállítás az előző változatra” (a telepítő az utolsó két változatot megőrzi). Régebbi változat: a <a href="https://github.com/nagyimreee-cyber/tajfuto-terkep-letoltes/releases">GitHub Releases</a> oldalról tölthető le, a telepítője a mostani fölé fut.<br>
+      Android: a régebbi APK a Releases oldalról; a telefon csak akkor engedi a régebbit telepíteni, ha előbb eltávolítod az appot (a telefonon tárolt, még nem szinkronizált adatokat előtte küldd át a gépre).</p>
+      <p lang="en">Windows: in the Start menu “Tájfutó Térkép Készítő – restore the previous version” (the installer keeps the last two versions). Older versions: download from <a href="https://github.com/nagyimreee-cyber/tajfuto-terkep-letoltes/releases">GitHub Releases</a> and run the installer over the current one.<br>
+      Android: older APKs are on the Releases page; the phone only installs an older one after you uninstall the app (sync any unsent data to the computer first).</p>
+    </details>
+    <details>
+      <summary><span lang="hu">Rendszerigény</span><span lang="en">Requirements</span></summary>
+      <p lang="hu">Windows 10 vagy 11 (64 bites), legalább 8 GB memória (nagy területhez 16 GB), 5 GB szabad lemez. Android 7 vagy újabb. Az asztali ablakhoz a Microsoft Edge WebView2 kell – a Windows 10/11-en általában fent van.</p>
+      <p lang="en">Windows 10 or 11 (64-bit), at least 8 GB RAM (16 GB for large areas), 5 GB free disk. Android 7 or newer. The desktop window needs Microsoft Edge WebView2 – usually already installed on Windows 10/11.</p>
+    </details>
+  </div>
+</section>
+
+<section id="ujdonsagok">
+  <div class="wrap">
+    <h2 class="sec"><span lang="hu">Újdonságok</span><span lang="en">What's new</span></h2>
+    <p class="sub"><span lang="hu">A változások listája magyarul (a programban is: Névjegy → Újdonságok).</span><span lang="en">The change list is in Hungarian (also in the program: About → What's new).</span></p>
+    <div class="log" id="log"><p class="small">…</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec"><span lang="hu">Jó tudni</span><span lang="en">Good to know</span></h2>
+    <details open>
+      <summary><span lang="hu">Ismert korlátok</span><span lang="en">Known limitations</span></summary>
+      <ul lang="hu">
+        <li>LiDAR nélkül a növényzet (zöld, sárga, futhatóság) <b>becslés</b>: a térkép terepbejárás nélkül nem versenykész. A program megjelöli a bizonytalan helyeket és bejárási tervet ad.</li>
+        <li>A térkép minősége a nyílt adatoktól függ (OpenStreetMap-teljesség, a domborzatmodell felbontása).</li>
+        <li>Nincs iOS-app; a telefonos app Androidra készül.</li>
+        <li>A telepítő és az APK nincs kereskedelmi tanúsítvánnyal aláírva (a Windows és a telefon figyelmeztethet).</li>
+      </ul>
+      <ul lang="en">
+        <li>Without LiDAR, vegetation (green, yellow, runnability) is an <b>estimate</b>: the map is not competition-ready without field checking. The program marks uncertain places and gives a field-check plan.</li>
+        <li>Map quality depends on the open data (OpenStreetMap completeness, elevation model resolution).</li>
+        <li>No iOS app; the phone app is for Android.</li>
+        <li>The installer and the APK are not signed with a commercial certificate (Windows and the phone may warn you).</li>
+      </ul>
+    </details>
+    <details>
+      <summary><span lang="hu">Adatvédelem</span><span lang="en">Privacy</span></summary>
+      <ul lang="hu">
+        <li>A program nem küld adatot a fejlesztőnek, nincs benne követés vagy reklám. A térképadatokat a nyilvános szolgáltatásoktól (pl. OpenStreetMap Overpass, domborzat- és műholdkép-szolgáltatók) a kijelölt terület befoglaló téglalapjával kéri le.</li>
+        <li>A telefon-szerver csak akkor fut, ha a PC programban elindítod. A gép hálózati címein (otthoni Wi-Fi, saját VPN) érhető el, 6 jegyű PIN-nel védve (5 hibás próbálkozás után 5 percig tilt); a PIN nem kerül naplóba. Nyilvános Wi-Fin ne kapcsold be.</li>
+        <li>A telefonos Diagnosztika csak a saját gépedre küld (ha megnyomod a „Küldés a gépnek” gombot).</li>
+      </ul>
+      <ul lang="en">
+        <li>The program sends no data to the developer; there is no tracking or advertising. Map data is requested from public services (e.g. OpenStreetMap Overpass, elevation and imagery providers) using the bounding box of the selected area.</li>
+        <li>The phone server only runs when you start it in the PC program. It is reachable on the computer's network addresses (home Wi-Fi, your own VPN), protected by a 6-digit PIN (locked for 5 minutes after 5 wrong attempts); the PIN is not logged. Do not turn it on on public Wi-Fi.</li>
+        <li>The phone's Diagnostics only sends to your own computer (when you press “Send to computer”).</li>
+      </ul>
+    </details>
+    <details>
+      <summary><span lang="hu">Licencek és adatforrások</span><span lang="en">Licences and data sources</span></summary>
+      <table class="lic">
+        <tr><td>OpenStreetMap</td><td>© OpenStreetMap-közreműködők / contributors, ODbL 1.0 – <a href="https://www.openstreetmap.org/copyright">openstreetmap.org/copyright</a></td></tr>
+        <tr><td>Copernicus GLO-30 DEM</td><td>© DLR e.V. 2010–2014, © Airbus Defence and Space GmbH 2014–2018, Copernicus program (ESA)</td></tr>
+        <tr><td>Lechner DEM25</td><td>Lechner Tudásközpont, CC BY 4.0</td></tr>
+        <tr><td>BEV ALS-DTM (AT)</td><td>© BEV – Bundesamt für Eich- und Vermessungswesen, CC BY 4.0</td></tr>
+        <tr><td>ČÚZK DMR 5G (CZ)</td><td>© ČÚZK, CC BY 4.0</td></tr>
+        <tr><td>ARSO LiDAR, GURS (SI)</td><td>© ARSO, GURS – Republika Slovenija, CC BY 4.0</td></tr>
+        <tr><td>GEDTM30</td><td>OpenLandMap / OpenGeoHub, CC BY 4.0</td></tr>
+        <tr><td>AWS Terrain Tiles</td><td>Mapzen / Linux Foundation; SRTM, GMTED, ETOPO1 stb. – <a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md">attribution</a></td></tr>
+        <tr><td>Lechner HNHRL, ortofotó</td><td>Lechner Tudásközpont (Copernicus HRL-alapú felszínborítás; ortofotó a szolgáltatás feltételei szerint)</td></tr>
+        <tr><td>basemap.at</td><td>© basemap.at, CC BY 4.0</td></tr>
+        <tr><td>ESA WorldCover, Sentinel-2</td><td>© ESA WorldCover project / Copernicus Sentinel data, CC BY 4.0</td></tr>
+        <tr><td>Meta / WRI canopy height</td><td>Meta &amp; World Resources Institute, CC BY 4.0</td></tr>
+        <tr><td>Purple Pen</td><td>IOF-leírásjelek / description symbols – BSD 3-Clause</td></tr>
+        <tr><td>Leaflet</td><td>BSD 2-Clause</td></tr>
+        <tr><td>JSZip</td><td>MIT</td></tr>
+        <tr><td>Capacitor</td><td>MIT</td></tr>
+        <tr><td>Python</td><td>Flask (BSD-3), NumPy, SciPy, scikit-image (BSD-3), Shapely (BSD-3), pyproj (MIT), rasterio (BSD-3) + GDAL (MIT), Pillow (MIT-CMU), matplotlib (PSF-based), pywebview (BSD-3), laspy (BSD-2), ezdxf (MIT), segno (BSD-3), waitress (ZPL 2.1)</td></tr>
+        <tr><td>Karttapullautin</td><td>GPL-3.0 (külön program, a mellékelt eszközök között / bundled separate tool)</td></tr>
+      </table>
+      <p class="small"><span lang="hu">A teljes lista a programban: Névjegy → Licencek, és a telepített mappában: LICENCEK.txt.</span><span lang="en">Full list in the program: About → Licences, and in the installed folder: LICENCEK.txt.</span></p>
+    </details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0 0 8px"><b><span lang="hu">Hibát találtál?</span><span lang="en">Found a bug?</span></b>
+      <span lang="hu">A legegyszerűbb a programból: <b>Névjegy → Hiba bejelentése</b> (a verzió és a napló magától kitöltődik). Vagy itt:</span>
+      <span lang="en">Easiest from inside the program: <b>About → Report a bug</b> (fills in the version and log). Or here:</span>
+      <a href="https://github.com/nagyimreee-cyber/tajfuto-terkep-letoltes/issues/new?template=hiba.yml"><span lang="hu">hibabejelentés a GitHubon</span><span lang="en">report on GitHub</span></a>
+      <span lang="hu">(ingyenes GitHub-fiók kell; a bejelentések nyilvánosak).</span><span lang="en">(free GitHub account needed; reports are public).</span></p>
+    <span lang="hu">Tájfutó Térkép Készítő · a program ingyenes, „ahogy van” alapon, garancia nélkül.</span>
+    <span lang="en">Tájfutó Térkép Készítő · free, provided “as is”, without warranty.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var REL = "https://github.com/nagyimreee-cyber/tajfuto-terkep-letoltes/releases";
+  var root = document.documentElement;
+  function setLang(l) {
+    root.setAttribute("data-lang", l); root.lang = l;
+    try { localStorage.setItem("tt-site-lang", l); } catch (e) { }
+  }
+  var saved = null;
+  try { saved = localStorage.getItem("tt-site-lang"); } catch (e) { }
+  setLang(saved || ((navigator.language || "hu").toLowerCase().indexOf("hu") === 0 ? "hu" : "en"));
+  document.querySelectorAll(".langsw button").forEach(function (b) { b.addEventListener("click", function () { setLang(b.getAttribute("data-l")); }); });
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function mb(n) { return n ? (n / 1048576).toFixed(0) + " MB" : ""; }
+  fetch("release.json", { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d) return;
+    document.getElementById("verNum").textContent = d.version + " (build " + d.build + ")";
+    if (d.prerelease) document.getElementById("verTag").innerHTML = '<span class="tag beta">béta / beta</span>';
+    if (d.date) document.getElementById("verDate").textContent = "· " + d.date;
+    var base = REL + "/download/" + encodeURIComponent(d.tag) + "/";
+    document.getElementById("dlSetup").href = base + "TajfutoTerkep-Setup-" + d.version + ".exe";
+    document.getElementById("dlApk").href = base + "TajfutoTerep-" + d.version + ".apk";
+    var s = d.sizes || {}, h = d.sha256 || {};
+    document.getElementById("szSetup").textContent = ["TajfutoTerkep-Setup-" + d.version + ".exe", mb(s.setup)].filter(Boolean).join(" · ");
+    document.getElementById("szApk").textContent = ["TajfutoTerep-" + d.version + ".apk", mb(s.apk)].filter(Boolean).join(" · ");
+    document.getElementById("hashName").textContent = "TajfutoTerkep-Setup-" + d.version + ".exe";
+    if (h.setup) document.getElementById("shaSetup").textContent = h.setup;
+    if (h.apk) document.getElementById("shaApk").textContent = h.apk;
+    var log = (d.changelog || []).map(function (e) {
+      return "<h4>" + esc(e.version) + " <span class='small'>· " + esc(e.date) + "</span></h4><ul>" + e.items.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul>";
+    }).join("");
+    document.getElementById("log").innerHTML = log || "";
+  }).catch(function () { });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{
+ "version": "3.0.0",
+ "build": 125,
+ "date": "2026-11-03",
+ "tag": "v3.0.0-beta.1",
+ "prerelease": true,
+ "sha256": {
+  "setup": "516672311f2e05b34824f9ff0aede7a723933357e9a357d6184c2f4aee8a2276",
+  "apk": "b2f4683d92daa9fcb3753613f7ffa00f1621eaeaeb25c58fe3dede07d8b73720"
+ },
+ "sizes": {
+  "setup": 105989746,
+  "apk": 7696101
+ },
+ "changelog": [
+  {
+   "version": "3.0.0",
+   "date": "2026-11-03",
+   "items": [
+    "Az első, mások számára is letölthető kiadás: Windows-telepítő (Setup.exe, rendszergazdai jog nélkül, eltávolítással, a régi változat megőrzésével) és aláírt Android-APK, letöltőoldallal.",
+    "Új kinézet: 2026-11 (3.0) – a 2.x felépítése marad (négyfüles alsó sáv, Projekt-lap, lebegő sávok, vonalikonok emoji nélkül), de az üveghatás (áttetszőség, elmosás, fényes él) és a rugós mozgás kimaradt: tömör, jól olvasható felületek, csak rövid áttűnés.",
+    "Beállítások: az Üveghatás kapcsoló megszűnt; a Mozgás Auto / Be / Ki, a Téma Rendszer / Sötét / Nappali. A korábbi üveg- és mozgás-beállítás magától Auto-ra áll.",
+    "A Klasszikus (0.9) és a 2026-10 (1.0) kinézet változatlanul visszaválthatók.",
+    "Önellenőrzés: a frissítéshez szükséges lenyomatok és az OCAD-export a telepített programban is ellenőrizve.",
+    "Belső: a térképkészítés kódja témák szerint szétbontva (domborzat, felszínborítás, utak, ellenőrzések, jelentés), regressziós „aranytérképekkel” védve – a térkép eredménye nem változott.",
+    "Licencek és adatforrások a Névjegyben és a telepített mappában (LICENCEK.txt).",
+    "Hibabejelentő a PC-n (Program-beállítások és Névjegy) és a telefonon (Menü, Projekt-lap, Névjegy): előre kitöltött GitHub-hibajegy a verzióval, az eszközzel és a napló végével; a nevet az útvonalakból, a PIN-t és a tokeneket kitakarja, és küldés előtt minden látható és szerkeszthető."
+   ]
+  },
+  {
+   "version": "2.1.0",
+   "date": "2026-11-02",
+   "items": [
+    "Telefon, Jelek: új, egységes vonalikonok a betűk és karakterek helyett – a jelek ugyanúgy néznek ki a választólapon, ahogy a térképen rajzolódnak.",
+    "Telefon: új vonaljelek – Jelölt útvonal (szaggatott, a haladás irányába mutató nyilakkal, az irány megfordítható) és Bejárt nyomvonal (pontsor).",
+    "Telefon: útvonal-követés – jelölt útvonal a kijelölt pályaszakasz mentén (a hajlításokkal együtt), és „Bejárás”: a vonal vagy terület csúcsait a GPS adja, ahogy végigsétálsz rajta (5 méterenként, a végén egyszerűsítve).",
+    "PC: a PDF-nyomtatás és az OCAD/OMAP-export is rajzolja az új jeleket."
+   ]
+  },
+  {
+   "version": "2.0.0",
+   "date": "2026-11-01",
+   "items": [
+    "Liquid Glass: az új alapértelmezett kinézet a telefonon és a PC-n: áttetsző üvegfelületek a térkép fölött (elmosás, fényes él), rugós mozgás, egységes vonalikonok, emoji nélkül. A telefonon négyfüles alsó sáv (Terep, Pálya, Navigáció, Projekt), a PC-n lebegő üveg-panelek. (A 3.0.0-ban az üveghatás és a rugós mozgás kimaradt, a felépítés megmaradt.)",
+    "Üveghatás (Auto, Teljes, Könnyű, Ki), mozgás (Auto, Teljes, Kevés, Ki) és téma (Rendszer, Sötét, Nappali) a Beállításokban; az „Ki” fokozat ugyanazt a kinézetet tömör felületekkel adja, az Auto a gép sebességéhez igazodik. (A 3.0.0-ban az üveghatás-kapcsoló kimaradt.)",
+    "A régi kinézetek (2026-10, Klasszikus) a Beállításokban bármikor visszaválthatók, a régiek érintetlenek.",
+    "Verziókövetés: minden build kap verziószámot és build-számot; a Névjegy a gépen és a telefonon is megmutatja, a telefon és a gép egyeztetik a verziójukat, és jelzik, ha újabb telefonos app érhető el.",
+    "Az Android-app verziószáma ettől minden építésnél nő, így a frissítés mindig települ a régi fölé.",
+    "Kinézet-verziók: a Klasszikus (0.9) és a 2026-10 (1.0) befagyasztva marad, a Beállításokban bármikor visszaválthatók.",
+    "Telefon: pálya építésekor csak a kirakott pontokra lehet bökni (mint a Purple Penben); az „Összes” fülön rakhatók ki az új pontok.",
+    "Telefon: vektoros térkép nagy nagyításnál, javított rajz (a csíkok megszűntek), automatikus szinkron, hangjegyzet, nagyító pontkihelyezéshez.",
+    "PC: projektgaléria, Telefon és Garmin panel, a csempekészítés állapota, gyorsabb generálás.",
+    "OCAD-export: a lyukas területek helyesen kerülnek az .ocd fájlba."
+   ]
+  },
+  {
+   "version": "1.1",
+   "date": "2026-10-24",
+   "items": [
+    "Az első telepíthető telefonos alkalmazás és a PC program közös szinkronja."
+   ]
+  }
+ ]
+}

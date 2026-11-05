@@ -1,0 +1,54 @@
+name: Hiba bejelentése / Bug report
+description: Valami nem úgy működik, ahogy kellene (PC program vagy telefonos app). / Something does not work as expected.
+title: "[Hiba] "
+labels: ["hiba"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Köszönöm a bejelentést! A legegyszerűbb a programból küldeni (**Névjegy → Hiba bejelentése**): akkor a verzió és a napló magától kitöltődik.
+        **A bejelentés nyilvános** – ne írj bele személyes adatot (nevet, címet, jelszót, PIN-t).
+        Thank you! Reporting from inside the program (**About → Report a bug**) fills in the version and log automatically. **Reports are public.**
+  - type: input
+    id: verzio
+    attributes:
+      label: Verzió / Version
+      description: "A program verziója (Névjegy), pl. 3.0.0 · build 120"
+      placeholder: "3.0.0 · build 120"
+    validations:
+      required: true
+  - type: input
+    id: eszkoz
+    attributes:
+      label: Hol? / Where?
+      description: "PC program (Windows-verzió) vagy telefonos app (Android-verzió, telefon típusa)"
+      placeholder: "PC – Windows 11 / Telefon – Android 14, Samsung A54"
+    validations:
+      required: true
+  - type: textarea
+    id: leiras
+    attributes:
+      label: Mi történt? / What happened?
+      description: "Mit vártál, és mi történt helyette? Ha van hibaüzenet, írd ide szó szerint."
+    validations:
+      required: true
+  - type: textarea
+    id: lepesek
+    attributes:
+      label: Hogyan lehet előidézni? / Steps to reproduce
+      description: "Lépésenként: mit csináltál előtte (milyen terület, milyen beállítás)?"
+      placeholder: |
+        1. Kijelöltem egy területet …
+        2. Bekapcsoltam …
+        3. Megnyomtam …
+  - type: textarea
+    id: naplo
+    attributes:
+      label: Napló / Log
+      description: "A program kitölti (a felhasználónév az útvonalakból kitakarva)."
+      render: text
+  - type: textarea
+    id: kepek
+    attributes:
+      label: Képernyőkép / Screenshot
+      description: "Ide húzhatsz képet (opcionális)."
