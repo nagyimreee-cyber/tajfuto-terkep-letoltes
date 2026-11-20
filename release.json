@@ -1,16 +1,16 @@
 {
  "version": "3.0.0",
- "build": 125,
- "date": "2026-11-03",
- "tag": "v3.0.0-beta.1",
+ "build": 127,
+ "date": "2026-11-20",
+ "tag": "v3.0.0-beta.2",
  "prerelease": true,
  "sha256": {
-  "setup": "516672311f2e05b34824f9ff0aede7a723933357e9a357d6184c2f4aee8a2276",
-  "apk": "b2f4683d92daa9fcb3753613f7ffa00f1621eaeaeb25c58fe3dede07d8b73720"
+  "setup": "4e3337230ee8e477c4256bc466d752cf743939f6279565f83ffe4e37e7160e34",
+  "apk": "e8ad3d8cf659a5f2087bf953c126150b53d7e151739a7a0199f2481f906305c1"
  },
  "sizes": {
-  "setup": 105989746,
-  "apk": 7696101
+  "setup": 106009087,
+  "apk": 7698249
  },
  "changelog": [
   {
@@ -24,7 +24,9 @@
     "Önellenőrzés: a frissítéshez szükséges lenyomatok és az OCAD-export a telepített programban is ellenőrizve.",
     "Belső: a térképkészítés kódja témák szerint szétbontva (domborzat, felszínborítás, utak, ellenőrzések, jelentés), regressziós „aranytérképekkel” védve – a térkép eredménye nem változott.",
     "Licencek és adatforrások a Névjegyben és a telepített mappában (LICENCEK.txt).",
-    "Hibabejelentő a PC-n (Program-beállítások és Névjegy) és a telefonon (Menü, Projekt-lap, Névjegy): előre kitöltött GitHub-hibajegy a verzióval, az eszközzel és a napló végével; a nevet az útvonalakból, a PIN-t és a tokeneket kitakarja, és küldés előtt minden látható és szerkeszthető."
+    "Hibabejelentő a PC-n (Program-beállítások és Névjegy) és a telefonon (Menü, Projekt-lap, Névjegy): előre kitöltött GitHub-hibajegy a verzióval, az eszközzel és a napló végével; a nevet az útvonalakból, a PIN-t és a tokeneket kitakarja, és küldés előtt minden látható és szerkeszthető.",
+    "Javítva a béta után (béta.2): PC – a jobb oldali panel lelógott a képernyő aljáról, ezért a hosszabb lépéseken a „Térkép készítése” gomb nem látszott; a „Tartalom és kimenet” lépés oldalra elcsúszott; a gombsáv csak a térkép lépésein látszik; rendezett Program-beállítások; keskeny ablakban a térkép gombjai nem lógnak egymásra.",
+    "Javítva a béta után (béta.2): telefon – a pályák elcsúszó fülsora helyett egy pályaválasztó gomb (a hosszú név „…”-ra rövidül, a lista mutatja a pálya hosszát és pontszámát); fekvő helyzetben a fülsáv és az eszköztár egy sorban, a lapok oldalt nyílnak; a hibabejelentő jelölőnégyzete normál méretű; „Nincs GPS” a semmitmondó „hiba” helyett; a Pályák menü csoportokban; a Projekt-lapon a méretarány is látszik."
    ]
   },
   {
