@@ -1,16 +1,16 @@
 {
  "version": "3.0.0",
- "build": 127,
- "date": "2026-11-20",
- "tag": "v3.0.0-beta.2",
+ "build": 139,
+ "date": "2026-11-22",
+ "tag": "v3.0.0-beta.3",
  "prerelease": true,
  "sha256": {
-  "setup": "4e3337230ee8e477c4256bc466d752cf743939f6279565f83ffe4e37e7160e34",
-  "apk": "e8ad3d8cf659a5f2087bf953c126150b53d7e151739a7a0199f2481f906305c1"
+  "setup": "5ad9f534aad104d38c20e1fe0feaca80a0b86e7840585730421c36d3f03cf173",
+  "apk": "180fc3d0d90e6e74584aa775981c7dd96aaca9bf1d1ef827958b9d0c52788664"
  },
  "sizes": {
-  "setup": 106009087,
-  "apk": 7698249
+  "setup": 106024762,
+  "apk": 7717666
  },
  "changelog": [
   {
@@ -26,7 +26,20 @@
     "Licencek és adatforrások a Névjegyben és a telepített mappában (LICENCEK.txt).",
     "Hibabejelentő a PC-n (Program-beállítások és Névjegy) és a telefonon (Menü, Projekt-lap, Névjegy): előre kitöltött GitHub-hibajegy a verzióval, az eszközzel és a napló végével; a nevet az útvonalakból, a PIN-t és a tokeneket kitakarja, és küldés előtt minden látható és szerkeszthető.",
     "Javítva a béta után (béta.2): PC – a jobb oldali panel lelógott a képernyő aljáról, ezért a hosszabb lépéseken a „Térkép készítése” gomb nem látszott; a „Tartalom és kimenet” lépés oldalra elcsúszott; a gombsáv csak a térkép lépésein látszik; rendezett Program-beállítások; keskeny ablakban a térkép gombjai nem lógnak egymásra.",
-    "Javítva a béta után (béta.2): telefon – a pályák elcsúszó fülsora helyett egy pályaválasztó gomb (a hosszú név „…”-ra rövidül, a lista mutatja a pálya hosszát és pontszámát); fekvő helyzetben a fülsáv és az eszköztár egy sorban, a lapok oldalt nyílnak; a hibabejelentő jelölőnégyzete normál méretű; „Nincs GPS” a semmitmondó „hiba” helyett; a Pályák menü csoportokban; a Projekt-lapon a méretarány is látszik."
+    "Javítva a béta után (béta.2): telefon – a pályák elcsúszó fülsora helyett egy pályaválasztó gomb (a hosszú név „…”-ra rövidül, a lista mutatja a pálya hosszát és pontszámát); fekvő helyzetben a fülsáv és az eszköztár egy sorban, a lapok oldalt nyílnak; a hibabejelentő jelölőnégyzete normál méretű; „Nincs GPS” a semmitmondó „hiba” helyett; a Pályák menü csoportokban; a Projekt-lapon a méretarány is látszik.",
+    "Javítva (béta.3): telefon – a Mozgás / Téma kapcsolók gombjai ujjal is kényelmesen nyomhatók (40 px); 360 px széles telefonon az „Új elem” négy füle kifér; fekvő helyzetben a fülsáv gombjai magasabbak; a Névjegy hosszú webcímei tördelődnek (a lap nem csúszik oldalra); a Leíráslap a lap tényleges szélességéhez méretezve, nem lóg le jobbra.",
+    "Telefon (3.0): minden gomb legalább 44 px magas – a Mozgás / Téma kapcsolók, a pálya-eszköztár fekvő helyzetben, a felső állapotjelzők, a pályák Feljebb / Lejjebb gombja és a jelölőnégyzetes sorok is.",
+    "Telefon: első induláskor rövid, háromlapos bevezető (mi ez, térkép a telefonra, kapcsolat a géppel); a „Kapcsolat a számítógéppel” lap ezután nem jön fel minden indításkor, csak kérésre (Projekt-lap, gép-jelző).",
+    "PC: az új térkép neve a kijelölt terület helyéből és a dátumból készül (pl. „Budakeszi – 2026-11-21”; internet nélkül csak a dátum) – a kézzel beírt nevet sosem írja felül.",
+    "PC: a projektgaléria kártyáin a méretarány is látszik (dátum · méretarány · terület), a hosszú név két sorba tördelődik (rámutatva a teljes név), a gombsor minden kártyán egy vonalban.",
+    "PC: keskeny ablakban (1000–1099 px) a bal lépéssáv összecsukódik (csak a lépések száma, a név a buborékban), így a térkép a szélesség ~44 %-a (eddig ~25 %); a „Felszínborítás” lépésben a nyilas feliratok darabjai nem keverednek össze („2019 → ma”).",
+    "PC: a „Tartalom és kimenet” lépés négy összecsukható csoportban (Térkép tartalma · OOM-sablonok és régi térkép · Kimeneti fájlok · Terepi csomag és bejárás) – a ritkán kellő kettő alapból csukva, a beállítás-kereső kinyitja.",
+    "PC: ha a térkép nem készül el, a hiba a futás-panel tetején látszik, egy „Hiba bejelentése” gombbal (a bejelentő a hibát és a naplót előre kitölti); az állapotsor nem ugrál.",
+    "Telefon: valódi ISOM-jelek az „Új elem” palettán (pont, vonal, folt), a térképre tett pontokon és az elem adatlapján – ugyanaz a rajz, mint a kész térképen (a PC jelkészletéből), a korábbi karakter-ikonok (●, ▲, ⁙ …) és színcsíkok helyett.",
+    "Telefon: kedvenc jelek sávja az eszköztár fölött – a 6 leggyakrabban használt pontjel egy érintéssel a GPS-helyre, „Visszavonás” gombbal (10 jel 10 érintés; pontatlan GPS-nél a szokásos választó nyílik; a Beállításokban kikapcsolható).",
+    "Telefon: az Állapot lapon minden jelzés mellett magyarázat, mit jelent és mit tegyél (GPS, gép, elküldetlen elemek); az üres Ellenőrzés elmondja, honnan jönnek az ellenőrizendő helyek, és frissíthető a projekt; a 3.0-ban az Állapot lapról eltűnt a régi kinézetváltó (visszaváltott volna a 2026-10-es kinézetre).",
+    "Belső: a 3.0-s kinézet saját alapréteget kapott (a befagyasztott 2026-10-es réteg már nem szivárog bele), és a telefon kódjába beégetett 151 stílus helyett közös osztályok – a régi kinézetek képpontra változatlanok.",
+    "Belső: automatikus elrendezés-ellenőrzés – minden kiadás előtt a telefonos app 22 és a PC-s program 14 fő képernyője 8 méreten (telefon álló / fekvő / tablet, három PC-ablak) fej nélküli böngészőben: kilógó, letakart, egymásra csúszó gombok, túl kicsi érintési felület, levágott felirat, vízszintes görgetés és JavaScript-hiba; képernyőkép-összevetés elfogadott „arany” képekkel."
    ]
   },
   {
